@@ -1,6 +1,5 @@
 import express from "express"
 import dotenv from "dotenv"
-import authMiddleware from "./middlewares/authMiddleware.js"
 import GernalerrorMiddleware from "./middlewares/GernalerrorMiddleware.js";
 import norouterMiddleware from "./middlewares/norouterMiddleware.js";
 import logMiddleware from "./middlewares/logmiddleware.js";
@@ -25,6 +24,7 @@ app.use(
     },
   })
 );
+
 app.use("/api", routes);
 
 app.get("/", async(req, res)=> {

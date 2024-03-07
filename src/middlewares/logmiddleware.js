@@ -1,10 +1,19 @@
 import winston from "winston";
+import winstonDaily from "winston-daily-rotate-file"
 
+const logDir = "logs"; 
 const logger = winston.createLogger({
-  level: "info", // 로그 레벨을 'info'로 설정합니다.
   format: winston.format.json(), // 로그 포맷을 JSON 형식으로 설정합니다.
   transports: [
     new winston.transports.Console(), // 로그를 콘솔에 출력합니다.
+    new winstonDaily({
+      level: "info", // info 레벨에선
+      datePattern: "YYYY-MM-DD",
+      dirname: logDir,
+      filename: `%DATE%.log`,
+      maxFiles: 30,
+      zippedArchive: true,
+    }),
   ],
 });
 

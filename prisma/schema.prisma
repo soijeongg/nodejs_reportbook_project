@@ -21,7 +21,7 @@ model Users{
 
   books Books[]
   contents Contents[]
-  @@map("User")
+  @@map("Users")
 
 }
 enum bookStatus{
@@ -31,11 +31,12 @@ enum bookStatus{
 
 model Books {
   bookId Int @id @default(autoincrement()) @map("bookId")
+  title String @map("title")
   UserId Int @map("UserId")
   total_page Int @map("total_page")
   author String @map("author")
   image String @map("image")
-  bookstatus bookStatus @map("bookstatus")
+  bookstatus bookStatus @default(READING)  @map("bookstatus")
 
   Users Users @relation(fields: [UserId], references: [UserId], onDelete:Cascade)
   contents Contents[]

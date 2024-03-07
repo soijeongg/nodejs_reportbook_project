@@ -23,7 +23,7 @@ const nicknameSchema = Joi.object({
         if(idvalidation.error){
             const error = new Error("아이디 형식이 맞지 않습니다")
             error.status = 400
-            throw error
+            throw error;
         }
         const passwordvalidation = passwordSchema.validate({password});
         if (passwordvalidation.error) {

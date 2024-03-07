@@ -16,7 +16,7 @@ export const sginupserivce =async(id, password, nickname)=>{
     if(!createuser){
         const error = new Error("회원가입에 실패했습니다 다시 시도해주세요");
         error.status = 500;
-        throw new error();
+        throw  error();
     }
     return createuser
 

@@ -30,11 +30,13 @@ const getsignincontreoller = async (req, res, next) => {
       throw error;
     }
     const message = await sgininservice(id, password);
-    const [nickname, userId] = message.split(",");
+    const [nickname, UserId] = message.split(",");
 
     //UserId를 찾아 그걸 이용해 세션을 만들자 
-    req.session.userId = userId;
-    res.status(200).json({ messages: `${nickname}님 안녕하세요` });
+     req.session.userId = UserId;
+    res
+      .status(200)
+      .json({ messages: `${nickname}님 안녕하세요` });
   } catch (error) {
     next(error);
   }

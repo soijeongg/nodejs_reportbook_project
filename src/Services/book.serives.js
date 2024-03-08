@@ -4,8 +4,10 @@ import {
   createbooknostatus,
   checktitleImage,
   allbook,
-  puttitle,
-  findbook
+  putbook,
+  findbook,
+  putbooknostatus,
+  deletebook,
 } from "../Repository/bookRepository.js";
 
 
@@ -21,7 +23,7 @@ export let createbookService = async (
   //같은 제목이 있는 책은 두개 있을 수 있다 근데 책제목과 이미지가 같으면 안되는걸로 하자
   //이미지가 책 디자인인데 이건 다르니까
   let checktitle = await checktitleImage(title, image);
-  if (checktitle) {
+  if (checktitle!=null) {
     const error = new Error("중복된 책은 등록할 수 없습니다");
     error.status = 404;
     throw error;
@@ -51,8 +53,8 @@ export let createbookServicenostatus = async (
 ) => {
   //같은 제목이 있는 책은 두개 있을 수 있다 근데 책제목과 이미지가 같으면 안되는걸로 하자
   //이미지가 책 디자인인데 이건 다르니까
-  let checktitle = checktitleImage(title, image);
-  if (checktitle == []) {
+  let checktitle = await checktitleImage(title, image);
+  if (checktitle) {
     const error = new Error("중복된 책은 등록할 수 없습니다");
     error.status = 404;
     throw error;
@@ -76,13 +78,37 @@ export let getallbook = async (UserId) => {
   return allbooks
 };
 
-export const putbookService =async(UserId,bookId,title)=>{
-    let putbook = await findbook(UserId,bookId);
-    if(!putbook){
-        const error = new Error("존재하지 않는 책입니다.")
-        error.status  = 404
-        throw error;
-    }
-    let updatetitle = await putbook(title, bookId)
-    return updatetitle
+export const putbookService = async (UserId, bookId, status, total_page) => {
+  let putbooks = await findbook(UserId, bookId);
+  if (!putbooks) {
+    const error = new Error("존재하지 않는 책입니다.");
+    error.status = 404;
+    throw error;
+  }
+  let updatestatus = await putbook(status, bookId, total_page);
+  return updatestatus;
+};
+
+export const putbooknostatuss = async (UserId, bookId, total_page) => {
+  let putbooks = await findbook(UserId, bookId);
+  if (!putbooks) {
+    const error = new Error("존재하지 않는 책입니다.");
+    error.status = 404;
+    throw error;
+  }
+
+  let updatetotal = await putbooknostatus(bookId, total_page);
+  return updatetotal;
+};
+
+export const deletebookSerivce = async(bookId, UserId)=>{
+  let findone = await findbook(UserId, bookId)
+  if(!findone){
+    const error = new Error("존재하지 않는 책입니다.");
+    error.status = 404;
+    throw error;
+  }
+  let deleteb = await deletebook(bookId,UserId)
+  return deleteb
+
 }

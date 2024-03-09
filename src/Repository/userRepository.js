@@ -21,4 +21,40 @@ export const createUser = async(id, password, nickname) =>{
     return create
 }
 
-//아이디 가지고 닉네임을 찾는 함수 
+//들어온 아이디를 가지고 유저 아이디를 검색한다 그걸 리턴
+export const findRealId = async(id)=>{
+  let findd = await prisma.users.findFirst({
+    where:{id:id}
+  })
+  return findd
+}
+//닉네임과 id들어올시 바꿔주기
+
+export const  updateName = async(nickname, id)=>{
+  let updateNick = await prisma.users.update({
+    data:{nickname},where:{id:id}
+  })
+  return updateNick
+}
+
+export const updatePassword = async(password, id)=>{
+  let updatePass = await prisma.users.update({
+    data:{password},where:{id:id}
+  })
+  return updatePass
+}
+
+export const updatePasswordNickname = async(nickname, password,id)=>{
+  let updateNickPass= await prisma.users.update({
+    data:{nickname, password},
+    where:{id:id}
+  })
+  return updateNickPass
+}
+
+export const deleteUser = async(id)=>{
+  let deletename = await prisma.users.delete({
+    where:{id:id}
+  })
+  return deletename;
+}

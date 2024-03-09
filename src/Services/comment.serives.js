@@ -38,11 +38,12 @@ export const findid = async(bookId,UserId)=>{
 //그 이후 컨텐츠 아이디를 검사
 export const findCon = async(contentId,UserId)=>{
     let fiindCC = await findContentId(contentId,UserId)
-    if (fiindCC) {
+    if (!fiindCC) {
       const error = new Error("글귀가 존재하지 않습니다");
       error.status = 404;
       throw error;
     }
+    return fiindCC
 }
 
 export const putcommentSerivce = async (page, comment, contentId) => {
@@ -59,8 +60,8 @@ export const putPageOne = async (page, contentId) => {
   return putP;
 };
 //삭제하는 함수 구현
-export const deleteService = async(bookId,contentId)=>{
-    //먼저 책 이름
-    let deletC = await deleteComment(bookId,UserId)
-    return deletC
-}
+export const deleteService = async (contentId, UserId) => {
+  //먼저 책 이름
+  let deletC = await deleteComment(contentId, UserId);
+  return deletC;
+};

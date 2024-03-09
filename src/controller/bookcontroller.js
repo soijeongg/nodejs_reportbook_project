@@ -35,7 +35,7 @@ export const postbookcontroller = async(req, res, next)=>{
   
     //상태 있을시 서비스에 넘겨 레포지토리와 접속한다 
     if (bookstatus) {
-       const UserId = req.session.userId;
+        const { UserId } = res.locals.user;
       const createbooks =await  createbookService(
         title,
         total_page,
@@ -46,7 +46,7 @@ export const postbookcontroller = async(req, res, next)=>{
       );
     }
       else {
-         const UserId = req.session.userId;
+          const { UserId } = res.locals.user;
         const createbooks =await createbookServicenostatus(
           title,
           total_page,
@@ -62,9 +62,14 @@ export const postbookcontroller = async(req, res, next)=>{
     }
 
 export const getbookcontroller = async(req, res, next)=>{
-    const UserId = req.session.userId;
+  try{
+    const { UserId } = res.locals.user;
     const getallbooks = await getallbook(UserId)
     res.status(200).json({data:getallbooks})
+}
+catch(error){
+  next(error)
+}
 }
 export const updatebookcontoller = async(req, res, next)=>{
   try{
@@ -87,7 +92,7 @@ export const updatebookcontoller = async(req, res, next)=>{
       error.status = 404
       throw error
     }
-    const UserId = req.session.userId;
+     const { UserId } = res.locals.user;
     if(status){
     const updateOne = await putbookService(UserId,bookId,status,total_page)
     if(!updateOne){
@@ -117,7 +122,7 @@ export const deletebookContoller = async(req, res, next)=>{
      error.status = 404;
      throw error;
    }
-  const UserId = req.session.userId;
+   const { UserId } = res.locals.user;
   let deletOne = await deletebookSerivce(bookId, UserId)
   if(!deletOne){
     const error = new Error("삭제에 실패했습니다 다시 시도해주세요");

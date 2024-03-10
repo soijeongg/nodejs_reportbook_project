@@ -1,12 +1,4 @@
 import Joi from "joi";
-import {
-  createbookService,
-  createbookServicenostatus,
-  deletebookSerivce,
-  getallbook,
-  putbookService,
-  putbooknostatuss
-} from "../Services/book.serives.js";
 const statusSchema = Joi.object({
   status: Joi.string().valid("READING", "DONE").required(),
 });
@@ -16,8 +8,12 @@ const pageStatus = Joi.object({
 const BookIdScema = Joi.object({
   bookId: Joi.number().required(),
 });
+export class bookcontroller {
+  constructor(bookService){
+    this.bookService = bookService
+  }
 
-export const postbookcontroller = async(req, res, next)=>{
+postbookcontroller = async(req, res, next)=>{
     try{
     let { title, total_page, author, image, bookstatus } = req.body;
      let pagevalidation = pageStatus.validate({ total_page });
@@ -36,7 +32,7 @@ export const postbookcontroller = async(req, res, next)=>{
     //상태 있을시 서비스에 넘겨 레포지토리와 접속한다 
     if (bookstatus) {
         const { UserId } = res.locals.user;
-      const createbooks =await  createbookService(
+      await  bookService.createbookService(
         title,
         total_page,
         author,
@@ -47,7 +43,7 @@ export const postbookcontroller = async(req, res, next)=>{
     }
       else {
           const { UserId } = res.locals.user;
-        const createbooks =await createbookServicenostatus(
+        await bookService. createbookServicenostatus(
           title,
           total_page,
           author,
@@ -61,17 +57,17 @@ export const postbookcontroller = async(req, res, next)=>{
     }
     }
 
-export const getbookcontroller = async(req, res, next)=>{
+getbookcontroller = async(req, res, next)=>{
   try{
     const { UserId } = res.locals.user;
-    const getallbooks = await getallbook(UserId)
+    const getallbooks = await bookService.getallbook(UserId)
     res.status(200).json({data:getallbooks})
 }
 catch(error){
   next(error)
 }
 }
-export const updatebookcontoller = async(req, res, next)=>{
+updatebookcontoller = async(req, res, next)=>{
   try{
     let{total_page,status} = req.body;
     let pagevalidation = pageStatus.validate({total_page})
@@ -94,13 +90,13 @@ export const updatebookcontoller = async(req, res, next)=>{
     }
      const { UserId } = res.locals.user;
     if(status){
-    const updateOne = await putbookService(UserId,bookId,status,total_page)
+    const updateOne = await bookService.putbookService(UserId,bookId,status,total_page)
     if(!updateOne){
         const error = new Error("업데이트에 실패했습니다 다시 시도해주세요")
         throw error
     }}
     else{
-    const updateOne = await putbooknostatuss(UserId, bookId, total_page)
+    const updateOne = await bookService.putbooknostatuss(UserId, bookId, total_page)
     if(!updateOne){
       const error = new Error("업데이트에 실패했습니다 다시 시도해주세요");
       throw error;
@@ -113,7 +109,7 @@ export const updatebookcontoller = async(req, res, next)=>{
   }
 }
 
-export const deletebookContoller = async(req, res, next)=>{
+deletebookContoller = async(req, res, next)=>{
   try{
   const{bookId} = req.params
    let bookIdvalidation = BookIdScema.validate({ bookId });
@@ -123,7 +119,7 @@ export const deletebookContoller = async(req, res, next)=>{
      throw error;
    }
    const { UserId } = res.locals.user;
-  let deletOne = await deletebookSerivce(bookId, UserId)
+  let deletOne = await bookService.deletebookSerivce(bookId, UserId);
   if(!deletOne){
     const error = new Error("삭제에 실패했습니다 다시 시도해주세요");
     throw error;
@@ -131,6 +127,7 @@ export const deletebookContoller = async(req, res, next)=>{
   return res.status(200).json({mesage:"성공적으로 삭제했습니다"})
 }catch(error){
   next(error)
+}
 }
 }
 

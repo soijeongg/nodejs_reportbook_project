@@ -1,18 +1,13 @@
 
-import {
-  createbook,
-  createbooknostatus,
-  checktitleImage,
-  allbook,
-  putbook,
-  findbook,
-  putbooknostatus,
-  deletebook,
-} from "../Repository/bookRepository.js";
+
+export class bookService{
+  constructor(bookRepository){
+    this.bookRepository = bookRepository
+  }
 
 
 //title,  total_page,author,image,bookstatus가 들어왔을떄 create하자
-export let createbookService = async (
+createbookService = async (
   title,
   total_page,
   author,
@@ -22,14 +17,14 @@ export let createbookService = async (
 ) => {
   //같은 제목이 있는 책은 두개 있을 수 있다 근데 책제목과 이미지가 같으면 안되는걸로 하자
   //이미지가 책 디자인인데 이건 다르니까
-  let checktitle = await checktitleImage(title, image);
+  let checktitle = await bookRepository.checktitleImage(title, image);
   if (checktitle!=null) {
     const error = new Error("중복된 책은 등록할 수 없습니다");
     error.status = 404;
     throw error;
   }
   //여기서 넘어오면 저장하자
-  let createb = await createbook(
+  let createb = await bookRepository.createbook(
     title,
     total_page,
     author,
@@ -44,7 +39,7 @@ export let createbookService = async (
 };
 
 //title,  total_page,author,image,bookstatus가 들어왔을떄 create하자
-export let createbookServicenostatus = async (
+createbookServicenostatus = async (
   title,
   total_page,
   author,
@@ -53,14 +48,14 @@ export let createbookServicenostatus = async (
 ) => {
   //같은 제목이 있는 책은 두개 있을 수 있다 근데 책제목과 이미지가 같으면 안되는걸로 하자
   //이미지가 책 디자인인데 이건 다르니까
-  let checktitle = await checktitleImage(title, image);
+  let checktitle = await bookRepository.checktitleImage(title, image);
   if (checktitle) {
     const error = new Error("중복된 책은 등록할 수 없습니다");
     error.status = 404;
     throw error;
   }
   //여기서 넘어오면 저장하자
-  let createb = await createbooknostatus(
+  let createb = await bookRepository. createbooknostatus(
     title,
     total_page,
     author,
@@ -73,43 +68,44 @@ export let createbookServicenostatus = async (
   }
 };
 //전부 조회하는 함수 
-export let getallbook = async (UserId) => {
-  let allbooks = await allbook(UserId);
+getallbook = async (UserId) => {
+  let allbooks = await bookRepository.allbook(UserId);
   return allbooks
 };
 
-export const putbookService = async (UserId, bookId, status, total_page) => {
-  let putbooks = await findbook(UserId, bookId);
+putbookService = async (UserId, bookId, status, total_page) => {
+  let putbooks = await bookRepository.findbook(UserId, bookId);
   if (!putbooks) {
     const error = new Error("존재하지 않는 책입니다.");
     error.status = 404;
     throw error;
   }
-  let updatestatus = await putbook(status, bookId, total_page);
+  let updatestatus = await bookRepository.putbook(status, bookId, total_page);
   return updatestatus;
 };
 
-export const putbooknostatuss = async (UserId, bookId, total_page) => {
-  let putbooks = await findbook(UserId, bookId);
+putbooknostatuss = async (UserId, bookId, total_page) => {
+  let putbooks = await bookRepository.findbook(UserId, bookId);
   if (!putbooks) {
     const error = new Error("존재하지 않는 책입니다.");
     error.status = 404;
     throw error;
   }
 
-  let updatetotal = await putbooknostatus(bookId, total_page);
+  let updatetotal = await bookRepository.putbooknostatus(bookId, total_page);
   return updatetotal;
 };
 
-export const deletebookSerivce = async(bookId, UserId)=>{
-  let findone = await findbook(UserId, bookId)
+ deletebookSerivce = async(bookId, UserId)=>{
+  let findone = await bookRepository.findbook(UserId, bookId);
   if(!findone){
     const error = new Error("존재하지 않는 책입니다.");
     error.status = 404;
     throw error;
   }
-  let deleteb = await deletebook(bookId,UserId)
+  let deleteb = await bookRepository.deletebook(bookId, UserId);
   return deleteb
 
 }
 //delete 리프래시 토큰 세션이면 세션 키 받아서 지우기 db도 래디스 써서 리프래시 토큰 
+}

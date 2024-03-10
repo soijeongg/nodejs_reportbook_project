@@ -1,6 +1,6 @@
-import { findbook } from "../Repository/bookRepository.js"
-import { createcomment, deleteComment, findContentId, getcomment,  putComment, putCommentPage, putPage } from "../Repository/commentRepository.js"
 
+import { createcomment, deleteComment, findContentId, getcomment,  putComment, putCommentPage, putPage } from "../Repository/commentRepository.js"
+import { bookRepository } from "../Repository/bookRepository.js"
 
 //create 먼저 검사하고 있으면 createcomment로 보낸다 
 export const postcontentService = async(page, bookId, UserId, comment)=>{
@@ -32,7 +32,7 @@ export const getcommented  = async(bookId, UserId)=>{
 //put 함수 (다 있을때)
 //책 아이디를 검색하기 
 export const findid = async(bookId,UserId)=>{
-    let findB = await findbook(bookId,UserId)
+    let findB = await bookRepository.findbook(bookId, UserId);
     return findB
 }
 //그 이후 컨텐츠 아이디를 검사

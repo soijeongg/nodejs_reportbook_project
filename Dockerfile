@@ -28,9 +28,9 @@ RUN yarn prisma generate
 
 EXPOSE 3000
 
-ENV DATABASE_URL="mysql://root:aaaa4321@express-database.cqfhpl0935hl.ap-northeast-2.rds.amazonaws.com:3306/personaltest"
-ENV PORT = 3000
-ENV JWT_SECRET="pratice" 
+ENV DATABASE_URL=${DATABASE_URL}
+ENV PORT = ${PORT}
+ENV JWT_SECRET=${JWT_SECRET}
 CMD [ "yarn","dev" ]
 
 
